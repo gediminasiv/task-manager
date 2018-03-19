@@ -1,0 +1,30 @@
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}BRIS | {{ 'client_edit'|trans }}{% endblock %}
+
+{% block content %}
+    <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+        <i class="entypo-right-circled"></i>
+        {{ 'client_edit'|trans }}
+    </h3>
+    <a class="btn btn-primary pull-right btn-xs" href="{{ path('client_list') }}">{{ 'back_to_the_list'|trans }}</a>
+
+    <br /><br />
+    {% if app.session.flashBag.has('success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('success') %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {{ form_start(edit_form) }}
+        {{ form_widget(edit_form) }}
+        <input class="btn btn-success pull-right" type="submit" value="{{ 'save'|trans }}" />
+    {{ form_end(edit_form) }}
+
+    <br /><br />
+
+    <hr style="margin-top:0px;" />
+{% endblock %}

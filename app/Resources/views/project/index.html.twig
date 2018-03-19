@@ -1,0 +1,73 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}BRIS | {{ 'projects'|trans }}{% endblock %}
+
+{% block content %}
+<h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+    <i class="entypo-right-circled"></i>
+    {{ 'project_list'|trans }}
+</h3>
+<a href="{{ path('project_new') }}" class="btn btn-primary pull-right">
+    <i class="entypo-paper-plane"></i>
+    {{ 'add_project'|trans }}
+</a>
+
+<br /><br />
+
+<div class="row">
+    <div class="col-xs-12">
+        {% if app.session.flashBag.has('project_success') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('project_success') %}
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <table id="table_export" class="table table-bordered table-striped datatable dataTable">
+            <thead>
+                <tr>
+                    <th data-priority="8"></th>
+                    <th data-priority="2">{{ 'title'|trans }}</th>
+                    <th data-priority="3">{{ 'address'|trans }}</th>
+                    <th data-priority="7">{{ 'telephone'|trans }}</th>
+                    <th data-priority="4">{{ 'email'|trans }}</th>
+                    <th data-priority="6">{{ 'responsible_user'|trans }}
+                    <th data-priority="5">{{ 'client'|trans }}</th>
+                    <th data-priority="1">{{ 'actions'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for project in projects %}
+                <tr>
+                    <td>{{ project.id }}</td>
+                    <td>{{ project.title }}</td>
+                    <td>{{ project.address }}</td>
+                    <td>{{ project.telephone }}</td>
+                    <td>{{ project.email }}</td>
+                    <td>
+                        {% if project.client %}
+                            <a href="{{ path('user_edit', { id: project.client.user.id }) }}">{{ project.client.user.firstName }} {{ project.client.user.lastName }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if project.client %}
+                            <a href="{{ path('client_edit', { id: project.client.id }) }}">{{ project.client.name }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="btn btn-success" href="{{ path('project_edit', { 'id': project.id }) }}">{{ 'edit'|trans }}</a>
+                        {% if app.user.hasRole('ROLE_SUPER_ADMIN') %}
+                            <a class="btn btn-danger" href="{{ path('project_delete', { 'id': project.id }) }}">{{ 'delete'|trans }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}BRIS | {{ 'reports'|trans }}{% endblock %}
+
+{% block content %}
+<h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+    <i class="entypo-right-circled"></i>
+    {{ 'report_generation'|trans }}
+</h3>
+
+<br /><br />
+<script type="text/javascript" src="/components/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="/components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="/components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+<div class="row">
+    <form id="export_generation_form" action="{{ path('generate_export_report') }}" method="post">
+        <div class="col-xs-6">
+            <h4>{{ 'timeframe'|trans }}</h4>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="alert alert-success">
+                        {{ 'if_you_do_not_choose_period_it_is_set_to_all_time'|trans }}
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <input class="form-control datepicker" name="date-from" id="date-from" type="text" placeholder="{{ 'from'|trans }}" />
+                </div>
+                <div class="col-xs-6">
+                    <input class="form-control datepicker" name="date-to" id="date-to" type="text" placeholder="{{ 'to'|trans }}" />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <h4>{{ 'sort_by'|trans }}</h4>
+            <div class="row">
+                <div class="col-xs-12">
+                    <select name="sort-by" class="form-control entity-selector">
+                        <option value="0">{{ 'client'|trans }}</option>
+                        <option value="1">{{ 'project'|trans }}</option>
+                        <option value="2">{{ 'user'|trans }}</option>
+                    </select>
+                </div>
+                <br /><br />
+                <br />
+                <div class="col-xs-12">
+                      <input class="form-check-input" type="checkbox" name="use-single" id="defaultCheck1">
+                      <label class="form-check-label" for="defaultCheck1">
+                        {{ 'use'|trans }}:
+                      </label>
+                    <br />
+                    <div class="form-container">
+                        {{ render(controller('AppBundle\\Controller\\ReportController::generateFormAction', { 'formType': 'client' }))}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12"><br />
+            <input type="submit" class="btn btn-success export-button" style="float:right;" value="{{ 'export'|trans }}" />
+        </div>
+    </form>
+</div>
+
+<script>
+$(document).ready(function(){
+    $('#date-from, #date-to').datetimepicker({
+        format: 'YYYY-MM-DD'
+    });
+
+    $('.export-button').click(function(){
+        $('#export_generation_form').submit();
+    });
+
+    $('.entity-selector').change(function(){
+        var data = $(this).val();
+        var formType = '';
+
+        if (data == 0) {
+            formType = 'client';
+        } else if (data == 1) {
+            formType = 'project';
+        } else {
+            formType = 'user';
+        }
+
+        $.get('{{ path('generate_form') }}', { formType: formType }, function (data) {
+            $('.form-container').html(data);
+        });
+    });
+});
+</script>
+{% endblock %}

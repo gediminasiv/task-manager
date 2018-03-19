@@ -1,0 +1,114 @@
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}BRIS | {{ 'task_edit'|trans }}{% endblock %}
+
+{% block content %}
+    <script type="text/javascript" src="/components/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="/components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="/components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+                <i class="entypo-right-circled"></i>
+                {{ 'task_edit'|trans }}
+            </h3>
+            <a class="btn btn-primary pull-right btn-xs" href="{{ path('archive_list') }}">{{ 'back_to_the_list'|trans }}</a>
+
+            <br /><br />
+            {% if app.session.flashBag.has('task_success') %}
+                <div class="alert alert-success">
+                    {% for msg in app.session.flashBag.get('task_success') %}
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {{ form_start(edit_form) }}
+                {{ form_widget(edit_form) }}
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        {% if task.taskImageName %}
+                            <a href="/uploads/{{ task.taskImageName }}"><img src="/uploads/{{ task.taskImageName }}" style="max-width: 250px;" alt="." /></a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <input class="btn btn-success pull-right" type="submit" value="{{ 'save'|trans }}" />
+            {{ form_end(edit_form) }}
+
+            <br /><br />
+        </div>
+    </div>
+
+    <hr style="margin-top:0px;" />
+
+    {% if taskLogs|length > 0 %}
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 style="margin:20px 0px; color: #818da1; font-weight: 200;">
+                    <i class="entypo-tag"></i>
+                    {{ 'progress'|trans }}
+                </h3>
+
+                <br /><br />
+
+                <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>{{ 'time'|trans }}</th>
+                                <th>{{ 'status_before'|trans }}</th>
+                                <th>{{ 'status_after'|trans }}</th>
+                                <th>{{ 'user_changed'|trans }}</th>
+                                <th>{{ 'user_before'|trans }}</th>
+                                <th>{{ 'user_after'|trans }}</th>
+                                <th>{{ 'cancelled_comment'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for taskLog in taskLogs %}
+                                <tr>
+                                    <td>{{ taskLog.created|date('Y-m-d H:i:s') }}</td>
+                                    <td>
+                                        {% if taskLog.statusBefore == 0 %}
+                                            <span class="label label-success">{{ 'open'|trans }}</span>
+                                        {% elseif taskLog.statusBefore == 1 %}
+                                            <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                                        {% elseif taskLog.statusBefore == 2 %}
+                                            <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                                        {% else %}
+                                            <span class="label label-info">{{ 'finished'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if taskLog.statusAfter == 0 %}
+                                            <span class="label label-success">{{ 'open'|trans }}</span>
+                                        {% elseif taskLog.statusAfter == 1 %}
+                                            <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                                        {% elseif taskLog.statusAfter == 2 %}
+                                            <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                                        {% else %}
+                                            <span class="label label-info">{{ 'finished'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><a href="{{ path('user_edit', { id: taskLog.userChanged.id }) }}">{{ taskLog.userChanged.firstName }} {{ taskLog.userChanged.lastName }}</a></td>
+                                    <td><a href="{{ path('user_edit', { id: taskLog.userBefore.id }) }}">{{ taskLog.userBefore.firstName }} {{ taskLog.userBefore.lastName }}</a></td>
+                                    <td><a href="{{ path('user_edit', { id: taskLog.userAfter.id }) }}">{{ taskLog.userAfter.firstName }} {{ taskLog.userAfter.lastName }}</a></td>
+                                    <td>{{ taskLog.comment }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    {% endif %}
+    <script>
+    $(document).ready(function(){
+        $('.datepicker input').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+    });
+    </script>
+{% endblock %}

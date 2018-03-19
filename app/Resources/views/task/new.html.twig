@@ -1,0 +1,96 @@
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}BRIS | {{ 'add_task'|trans }}{% endblock %}
+
+{% block content %}
+    <script type="text/javascript" src="/components/moment/min/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="/components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="/components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+        <i class="entypo-right-circled"></i>
+        {{ 'add_task'|trans }}
+    </h3>
+    <a class="btn btn-primary pull-right btn-xs" href="{{ path('dashboard') }}">{{ 'back_to_the_list'|trans }}</a>
+
+    <br /><br />
+
+    {% if app.session.flashBag.has('task_success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('task_success') %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {{ form_start(form) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.user) }}
+        {{ form_row(form.project) }}
+
+        <div class="project-container">
+            {{ form_row(form.client) }}
+        </div>
+        {{ form_row(form.plannedTime) }}
+        <input class="btn btn-success pull-right" type="submit" value="{{ 'save'|trans }}" />
+    {{ form_end(form) }}
+
+    <br /><br />
+
+    <hr style="margin-top:0px;" />
+
+    <input type="hidden" id="url-list" value="{{ path('user_search_list') }}" />
+    <input type="hidden" id="url-get" value="/api/fetch-single" />
+    <input type="hidden" id="url-project-list" value="{{ path('project_search_list') }}" />
+    <input type="hidden" id="url-project-get" value="/api/fetch-single-project" />
+    <input type="hidden" id="url-client-list" value="{{ path('client_search_list') }}" />
+    <input type="hidden" id="url-client-get" value="/api/fetch-single-client" />
+
+    <script>
+    function parseMinutes()
+    {
+        var minutes = new Date().getMinutes();
+
+        return minutes - minutes%5;
+    }
+
+    $(document).ready(function(){
+        $('.datepicker input').datetimepicker({
+            format: 'YYYY-MM-DD',
+            defaultDate: new Date(),
+            locale: 'lt'
+        });
+
+        $('#appbundle_task_plannedTime_time_hour').val(new Date().getHours());
+
+        $('#appbundle_task_plannedTime_time_minute').val(parseMinutes());
+
+        var options = {
+            url_list: $('#url-list').val(),
+            url_get: $('#url-get').val(),
+            min_length: 0
+        };
+
+        $('#appbundle_task_user').autocompleter(options);
+
+        $('#appbundle_task_project').autocompleter({
+            url_list: $('#url-project-list').val(),
+            url_get: $('#url-project-get').val(),
+            min_length: 0
+        });
+
+        $('#appbundle_task_client').autocompleter({
+            url_list: $('#url-client-list').val(),
+            url_get: $('#url-client-get').val(),
+            min_length: 0
+        });
+
+        $('[id^=fake_]').on('focus', function (event, ui) {
+            $(this).autocomplete('search', '');
+        });
+    });
+    </script>
+
+    <script type="text/javascript" src="{{ asset('assets/js/newTask.js') }}"></script>
+{% endblock %}

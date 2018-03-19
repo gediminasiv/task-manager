@@ -1,0 +1,35 @@
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}BRIS | {{ 'change_timeout_value'|trans }}{% endblock %}
+
+{% block content %}
+    <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+        <i class="entypo-right-circled"></i>
+        {{ 'change_timeout_value'|trans }}
+    </h3>
+    <a class="btn btn-primary pull-right btn-xs" href="{{ path('dashboard') }}">{{ 'back_to_the_list'|trans }}</a>
+
+    <br /><br />
+
+    {% if app.session.flashBag.has('settings_update_success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('settings_update_success') %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            {{ form_start(form) }}
+                {{ form_row(form.refreshInterval) }}
+                <input type="submit" value="{{ 'save'|trans }}" class="btn btn-success pull-right" />
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <br /><br />
+
+    <hr style="margin-top:0px;" />
+{% endblock %}

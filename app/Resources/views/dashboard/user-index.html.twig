@@ -1,0 +1,142 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}BRIS | {{ 'dashboard'|trans }}{% endblock %}
+
+{% block content %}
+
+<h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+    <i class="entypo-right-circled"></i>
+    {{ 'tasks'|trans }}
+</h3>
+
+{% if app.session.flashBag.has('task_update_success') %}
+    <div class="alert alert-success">
+        {% for msg in app.session.flashBag.get('task_update_success') %}
+            {{ msg }}
+        {% endfor %}
+    </div>
+{% endif %}
+
+<style>
+/*
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+    /* Force table to not be like tables anymore */
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr { border: 1px solid #ccc; }
+
+    td {
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+
+    td:before {
+        /* Now like a table header */
+        position: absolute;
+        display: block;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    /*
+    Label the data
+    */
+    td:nth-of-type(1):before { content: "{{ 'planned_time'|trans }}"; }
+    td:nth-of-type(2):before { content: "{{ 'description'|trans }}"; height: 30px; position: relative;}
+    td:nth-of-type(3):before { content: "{{ 'status'|trans }}"; }
+    td:nth-of-type(4):before { content: "{{ 'client'|trans }}"; }
+    td:nth-of-type(5):before { content: "{{ 'project'|trans }}"; }
+    td:nth-of-type(6):before { content: "{{ 'address'|trans }}"; }
+    td:nth-of-type(7):before { content: "{{ 'telephone'|trans }}"; }
+}
+</style>
+{% if userTasks|length > 0 %}
+    <table id="table_export" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{{ 'planned_time'|trans }}</th>
+                <th>{{ 'description'|trans }}</th>
+                <th>{{ 'status'|trans }}</th>
+                <th>{{ 'client'|trans }}</th>
+                <th>{{ 'project'|trans }}</th>
+                <th>{{ 'address'|trans }}</th>
+                <th>{{ 'telephone'|trans }}</th>
+                <th>{{ 'actions'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task in userTasks %}
+            <tr>
+                <td>{% if task.plannedTime %}{{ task.plannedTime|date('Y-m-d') }}{% else %}{{ 'none'|trans }}{% endif %}</td>
+                <td>{{ task.description }}</td>
+                <td>
+                    {% if task.status == 0 %}
+                        <span class="label label-success">{{ 'open'|trans }}</span>
+                    {% elseif task.status == 1 %}
+                        <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                    {% elseif task.status == 2 %}
+                        <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                    {% else %}
+                        <span class="label label-info">{{ 'finished'|trans }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.project.client %}
+                        {{ task.project.client.name }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ task.project.title }}</td>
+                <td>{{ task.project.address }}</td>
+                <td>{{ task.project.telephone }}</td>
+                <td>
+                    {% if task.status == 0 %}
+                        <a href="{{ path('start_task', { id: task.id }) }}" class="btn btn-success">{{ 'start'|trans }}</a>
+                    {% elseif task.status == 1 %}
+                        <a href="{{ path('enter_task', { id: task.id }) }}" class="btn btn-info">{{ 'finish_task'|trans }}</a>
+                        <a href="{{ path('delay_task', { id: task.id }) }}" class="btn btn-danger">{{ 'delay_task'|trans }}</a>
+                    {% elseif task.status == 2 %}
+                        <a href="{{ path('start_task', { id: task.id }) }}" class="btn btn-warning">{{ 'continue_task'|trans }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-success">
+                {{ 'no_tasks_assigned'|trans }}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}

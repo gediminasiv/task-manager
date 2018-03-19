@@ -1,0 +1,153 @@
+email: El.paštas
+invalid_login: Prisijungimo klaida
+password: Slaptažodis
+remember_me: Prisiminti?
+login: Prisijungti
+welcome: Sveiki
+edit_profile: Redaguoti profilį
+change_password: Keisti slaptažodį
+dashboard: Titulinis
+search: Paieška
+none: Nėra
+clients: Klientai
+team: Komanda
+projects: Projektai
+settings: Nustatymai
+logout: Atsijungti
+tasks: Užduotys
+account: Profilis
+client_list: Klientai
+add_client: Pridėti klientą
+name: Pavadinimas
+website: Internetinis puslapis
+responsible_user: Atsakingas vartotojas
+actions: Veiksmai
+edit: Redaguoti
+delete: Ištrinti
+client_edit: Kliento redagavimas
+client_name: Kliento pavadinimas
+save: Išsaugoti
+back_to_the_list: Atgal į sąrašą
+information_updated_successfully: Informacija atnaujinta sėkmingai!
+client_added_successfully: Klientas pridėtas sėkmingai!
+title: Pavadinimas
+address: Adresas
+telephone: Telefono numeris
+project_list: Projektai
+add_project: Pridėti projektą
+client: Klientas
+project_added_successfully: Projektas pridėtas sėkmingai!
+project_edit: Projekto redagavimas
+project_information_updated_successfully: Projekto informacija atnaujinta sėkmingai!
+add_user: Pridėti darbuotoją
+first_name: Vardas
+last_name: Pavardė
+roles: Rolės
+service_man: Darbuotojas
+support: Prižiūrintis administratorius
+admin: Sistemos administratorius
+user_edit: Vartotojo redagavimas
+enabled: Įjungtas
+yes: Taip
+no: Ne
+user_information_updated_successfully: Vartotojo informacija atnaujinta sėkmingai!
+user_created_successfully: Vartotojas sukurtas sėkmingai!
+add_task: Pridėti užduotį
+description: Aprašymas
+project: Projektas
+status: Būsena
+created: Sukurta
+arrival_time: Atvykimo laikas
+departure_time: Išvykimo laikas
+cancelled_comment: Atidėjimo priežastis
+task_addedd_successfully: Užduotis pridėta sėkmingai!
+task_edit: Užduoties redagavimas
+open: Atidaryta
+arrival: Atvykta
+delayed: Atidėta + komentaras
+finished: Užbaigta
+all: Visi statusai
+reports: Ataskaitos
+start: Pradėti
+enter_data: Įvesti duomenis
+finish_task: Užbaigti užduotį
+continue_task: Tęsti užduotį
+task: Užduotis
+delay_task: Atidėti užduotį
+distance: Nuvažiuotas atstumas (km)
+if_you_want_to_finish_the_task_enter_distance_and_press_save: Jeigu norite užbaigti užduotį, įveskite atstumą, kurį nuvažiavote ir spauskite išsaugoti.
+if_you_want_to_delay_task_please_add_a_comment_why_are_you_doing_it: Jeigu norite atidėti užduotį, prašome pridėti komentarą dėl ko tai darote. Vėliau užduotį vėl galėsite pradėti.
+task_updated_successfully: Užduotis atnaujinta sėkmingai!
+old_password: Senas slaptažodis
+new_password: Naujas slaptažodis
+repeat_new_password: Pakartoti naują slaptažodį
+old_password_is_incorrect: Senas slaptažodis neteisingas
+passwords_do_not_match: Slaptažodžiai nesutampa
+password_successfully_updated: Slaptažodis atnaujintas sėkmingai
+hours_spent: Valandų išdirbta
+total_distance_km: Visas atstumas (km)
+new_task_created_for_you: Jums sukurta nauja užduotis
+progress: Progresas
+time: Laikas
+user: Darbuotojas
+status_before: Statusas prieš
+status_after: Statusas po
+user_changed: Pakeitęs darbuotojas
+user_before: Darbuotojas prieš
+user_after: Darbuotojas po
+no_data_in_table: Lentelėje nėra duomenų
+showing_records_from_to: Rodomi įrašai nuo _START_ iki _END_ iš _TOTAL_ įrašų
+showing_records_from_0_to_0: Rodomi įrašai nuo 0 iki 0 iš 0
+filtered_info: (atrinkta iš _MAX_ įrašų)
+show_menu_length: Rodyti _MENU_ įrašus
+loading: Įkeliama...
+processing: Apdorojama...
+search: Ieškoti
+no_records_found: Įrašų nerasta
+first: Pirmas
+previous: Ankstesnis
+next: Sekantis
+last: Praeitas
+no_tasks_assigned: Nepriskirta nei viena užduotis
+task_archive: Archyvuoti užduotį
+invoice_no: Sąskaitos numeris
+archived_successfully: Užduotis suarchyvuota sėkmingai
+archives: Archyvas
+archived: Archyvuotas?
+photo: Nuotrauka
+finished_comment: Komentaras
+receipt_no: Kvito numeris
+calendar: Kalendorius
+last_month: Praėjęs
+today: Šiandien
+next_month: Sekantis
+navigation: Navigacija
+view: Kalendoriaus vaizdas
+year: Metai
+month: Mėnuo
+week: Savaitė
+day: Diena
+planned_time: Paskirtas laikas
+arrived_at_task: atvyko į objektą
+planned_at_time: suplanuotas laikas
+task_delayed: užduotis atidėta
+task_finished: užduotis užbaigta
+archive: Archyvuoti
+change_timeout_value: Auto atsinaujinimo intervalas
+change_interval: Keisti perkrovimo intervalą
+refresh_interval_in_seconds: Perkrovimo intervalas (s)
+settings_updated_successfully: Nustatymai atnaujinti sėkmingai
+my_tasks: Mano užduotys
+files: Failai
+timespent: Praleistas laikas
+report_generation: Generuoti ataskaitas
+timeframe: Laikotarpis
+sort_by: Ataskaita pagal
+from: Nuo
+to: Iki
+export: Eksportuoti
+task_description: Užduoties aprašymas
+total: VISO
+if_you_do_not_choose_period_it_is_set_to_all_time: Jeigu nepasirinksite laiko, ataskaita bus rodoma iš viso laiko
+file_deleted_successfully: Failas ištrintas sėkmingai
+use: Naudoti

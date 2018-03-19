@@ -1,0 +1,7 @@
+{% if formType == 'user' %}
+    {{ form(editForm.user) }}
+{% elseif formType == 'project' %}
+    {{ form(editForm.project) }}
+{% else %}
+    {{ form(editForm.client) }}
+{% endif %}

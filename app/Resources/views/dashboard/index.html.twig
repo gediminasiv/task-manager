@@ -1,0 +1,370 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}BRIS | {{ 'dashboard'|trans }}{% endblock %}
+
+{% block content %}
+
+<h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+    <i class="entypo-right-circled"></i>
+    {{ 'tasks'|trans }}
+</h3>
+<a href="{{ path('task_new') }}" class="btn btn-primary pull-right">
+    <i class="entypo-flag"></i>
+    {{ 'add_task'|trans }}
+</a>
+
+<br /><br />
+<div class="row">
+    <div class="col-xs-12">
+        {% if app.session.flashBag.has('task_success') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('task_success') %}
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if app.session.flashBag.has('archive_success') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('archive_success') %}
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <br /><br />
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#all">{{ 'all'|trans }} <span class="badge">{{ tasks|length }}</span></a></li>
+            <li><a data-toggle="tab" href="#open">{{ 'open'|trans }} <span class="badge">{{ openTasks|length }}</span></a></li>
+            <li><a data-toggle="tab" href="#arrival">{{ 'arrival'|trans }} <span class="badge">{{ arrivalTasks|length }}</span></a></li>
+            <li><a data-toggle="tab" href="#delayed">{{ 'delayed'|trans }} <span class="badge">{{ delayedTasks|length }}</span></a></li>
+            <li><a data-toggle="tab" href="#finished">{{ 'finished'|trans }} <span class="badge">{{ finishedTasks|length }}</span></a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="all" class="tab-pane fade in active">
+                <table id="table_export" class="table table-bordered table-striped datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th data-priority="11"></th>
+                            <th data-priority="4">{{ 'description'|trans }}</th>
+                            <th data-priority="2">{{'responsible_user'|trans }}</th>
+                            <th data-priority="3">{{ 'status'|trans }}</th>
+                            <th data-priority="5">{{ 'project'|trans }}</th>
+                            <th data-priority="6">{{ 'client'|trans }}</th>
+                            <th data-priority="7">{{ 'created'|trans }}</th>
+                            <th data-priority="8">{{ 'arrival_time'|trans }}</th>
+                            <th data-priority="9">{{ 'departure_time'|trans }}</th>
+                            <th data-priority="10">{{ 'cancelled_comment'|trans }}</th>
+                            <th data-priority="1">{{ 'actions'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for task in tasks %}
+                        <tr>
+                            <td>{{ task.id }}</td>
+                            <td><a href="{{ path('task_edit', { 'id': task.id }) }}">{{ task.description }}</a></td>
+                            <td><a href="{{ path('user_edit', { id: task.user.id }) }}">{{ task.user.firstName }} {{ task.user.lastName }}</a></td>
+                            <td>
+                                {% if task.status == 0 %}
+                                    <span class="label label-success">{{ 'open'|trans }}</span>
+                                {% elseif task.status == 1 %}
+                                    <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                                {% elseif task.status == 2 %}
+                                    <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                                {% else %}
+                                    <span class="label label-info">{{ 'finished'|trans }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.project is not null %}
+                                    <a href="{{ path('project_edit', { id: task.project.id }) }}">{{ task.project.title }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.client is not null %}
+                                    <a href="{{ path('client_edit', { id: task.client.id }) }}">{{ task.client.name }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{% if task.created %}{{ task.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if task.arrivalTime %}{{ task.arrivalTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.departureTime %}{{ task.departureTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.cancelledComment %}{{ task.cancelledComment }}{% else %}-{% endif %}</td>
+                            <td>
+                                <a class="btn btn-success" href="{{ path('task_edit', { 'id': task.id }) }}">{{ 'edit'|trans }}</a>
+                                {% if app.user.hasRole('ROLE_SUPER_ADMIN') %}
+                                    <a class="btn btn-danger" href="{{ path('task_delete', { 'id': task.id }) }}">{{ 'delete'|trans }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="open" class="tab-pane fade in">
+                <table id="table_export" class="table table-bordered table-striped datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th data-priority="11"></th>
+                            <th data-priority="4">{{ 'description'|trans }}</th>
+                            <th data-priority="2">{{'responsible_user'|trans }}</th>
+                            <th data-priority="3">{{ 'status'|trans }}</th>
+                            <th data-priority="5">{{ 'project'|trans }}</th>
+                            <th data-priority="6">{{ 'client'|trans }}</th>
+                            <th data-priority="7">{{ 'created'|trans }}</th>
+                            <th data-priority="8">{{ 'arrival_time'|trans }}</th>
+                            <th data-priority="9">{{ 'departure_time'|trans }}</th>
+                            <th data-priority="10">{{ 'cancelled_comment'|trans }}</th>
+                            <th data-priority="1">{{ 'actions'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for task in openTasks %}
+                        <tr>
+                            <td>{{ task.id }}</td>
+                            <td>{{ task.description }}</td>
+                            <td><a href="{{ path('user_edit', { id: task.user.id }) }}">{{ task.user.firstName }} {{ task.user.lastName }}</a></td>
+                            <td>
+                                {% if task.status == 0 %}
+                                    <span class="label label-success">{{ 'open'|trans }}</span>
+                                {% elseif task.status == 1 %}
+                                    <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                                {% elseif task.status == 2 %}
+                                    <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                                {% else %}
+                                    <span class="label label-info">{{ 'finished'|trans }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.project is not null %}
+                                    <a href="{{ path('project_edit', { id: task.project.id }) }}">{{ task.project.title }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.client is not null %}
+                                    <a href="{{ path('client_edit', { id: task.client.id }) }}">{{ task.client.name }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{% if task.created %}{{ task.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if task.arrivalTime %}{{ task.arrivalTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.departureTime %}{{ task.departureTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.cancelledComment %}{{ task.cancelledComment }}{% else %}-{% endif %}</td>
+                            <td>
+                                <a class="btn btn-success" href="{{ path('task_edit', { 'id': task.id }) }}">{{ 'edit'|trans }}</a>
+                                {% if app.user.hasRole('ROLE_SUPER_ADMIN') %}
+                                    <a class="btn btn-danger" href="{{ path('task_delete', { 'id': task.id }) }}">{{ 'delete'|trans }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="arrival" class="tab-pane fade in">
+                <table id="table_export" class="table table-bordered table-striped datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th data-priority="11"></th>
+                            <th data-priority="4">{{ 'description'|trans }}</th>
+                            <th data-priority="2">{{'responsible_user'|trans }}</th>
+                            <th data-priority="3">{{ 'status'|trans }}</th>
+                            <th data-priority="5">{{ 'project'|trans }}</th>
+                            <th data-priority="6">{{ 'client'|trans }}</th>
+                            <th data-priority="7">{{ 'created'|trans }}</th>
+                            <th data-priority="8">{{ 'arrival_time'|trans }}</th>
+                            <th data-priority="9">{{ 'departure_time'|trans }}</th>
+                            <th data-priority="10">{{ 'cancelled_comment'|trans }}</th>
+                            <th data-priority="1">{{ 'actions'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for task in arrivalTasks %}
+                        <tr>
+                            <td>{{ task.id }}</td>
+                            <td>{{ task.description }}</td>
+                            <td><a href="{{ path('user_edit', { id: task.user.id }) }}">{{ task.user.firstName }} {{ task.user.lastName }}</a></td>
+                            <td>
+                                {% if task.status == 0 %}
+                                    <span class="label label-success">{{ 'open'|trans }}</span>
+                                {% elseif task.status == 1 %}
+                                    <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                                {% elseif task.status == 2 %}
+                                    <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                                {% else %}
+                                    <span class="label label-info">{{ 'finished'|trans }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.project is not null %}
+                                    <a href="{{ path('project_edit', { id: task.project.id }) }}">{{ task.project.title }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.client is not null %}
+                                    <a href="{{ path('client_edit', { id: task.client.id }) }}">{{ task.client.name }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{% if task.created %}{{ task.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if task.arrivalTime %}{{ task.arrivalTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.departureTime %}{{ task.departureTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.cancelledComment %}{{ task.cancelledComment }}{% else %}-{% endif %}</td>
+                            <td>
+                                <a class="btn btn-success" href="{{ path('task_edit', { 'id': task.id }) }}">{{ 'edit'|trans }}</a>
+                                {% if app.user.hasRole('ROLE_SUPER_ADMIN') %}
+                                    <a class="btn btn-danger" href="{{ path('task_delete', { 'id': task.id }) }}">{{ 'delete'|trans }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="delayed" class="tab-pane fade in">
+                <table id="table_export" class="table table-bordered table-striped datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th data-priority="11"></th>
+                            <th data-priority="4">{{ 'description'|trans }}</th>
+                            <th data-priority="2">{{'responsible_user'|trans }}</th>
+                            <th data-priority="3">{{ 'status'|trans }}</th>
+                            <th data-priority="5">{{ 'project'|trans }}</th>
+                            <th data-priority="6">{{ 'client'|trans }}</th>
+                            <th data-priority="7">{{ 'created'|trans }}</th>
+                            <th data-priority="8">{{ 'arrival_time'|trans }}</th>
+                            <th data-priority="9">{{ 'departure_time'|trans }}</th>
+                            <th data-priority="10">{{ 'cancelled_comment'|trans }}</th>
+                            <th data-priority="1">{{ 'actions'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for task in delayedTasks %}
+                        <tr>
+                            <td>{{ task.id }}</td>
+                            <td>{{ task.description }}</td>
+                            <td><a href="{{ path('user_edit', { id: task.user.id }) }}">{{ task.user.firstName }} {{ task.user.lastName }}</a></td>
+                            <td>
+                                {% if task.status == 0 %}
+                                    <span class="label label-success">{{ 'open'|trans }}</span>
+                                {% elseif task.status == 1 %}
+                                    <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                                {% elseif task.status == 2 %}
+                                    <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                                {% else %}
+                                    <span class="label label-info">{{ 'finished'|trans }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.project is not null %}
+                                    <a href="{{ path('project_edit', { id: task.project.id }) }}">{{ task.project.title }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.client is not null %}
+                                    <a href="{{ path('client_edit', { id: task.client.id }) }}">{{ task.client.name }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{% if task.created %}{{ task.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if task.arrivalTime %}{{ task.arrivalTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.departureTime %}{{ task.departureTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.cancelledComment %}{{ task.cancelledComment }}{% else %}-{% endif %}</td>
+                            <td>
+                                <a class="btn btn-success" href="{{ path('task_edit', { 'id': task.id }) }}">{{ 'edit'|trans }}</a>
+                                {% if app.user.hasRole('ROLE_SUPER_ADMIN') %}
+                                    <a class="btn btn-danger" href="{{ path('task_delete', { 'id': task.id }) }}">{{ 'delete'|trans }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="finished" class="tab-pane fade in">
+                <table id="table_export" class="table table-bordered table-striped datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th data-priority="11"></th>
+                            <th data-priority="4">{{ 'description'|trans }}</th>
+                            <th data-priority="2">{{'responsible_user'|trans }}</th>
+                            <th data-priority="3">{{ 'status'|trans }}</th>
+                            <th data-priority="5">{{ 'project'|trans }}</th>
+                            <th data-priority="6">{{ 'client'|trans }}</th>
+                            <th data-priority="7">{{ 'created'|trans }}</th>
+                            <th data-priority="8">{{ 'arrival_time'|trans }}</th>
+                            <th data-priority="9">{{ 'departure_time'|trans }}</th>
+                            <th data-priority="10">{{ 'cancelled_comment'|trans }}</th>
+                            <th data-priority="1">{{ 'actions'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for task in finishedTasks %}
+                        <tr>
+                            <td>{{ task.id }}</td>
+                            <td>{{ task.description }}</td>
+                            <td><a href="{{ path('user_edit', { id: task.user.id }) }}">{{ task.user.firstName }} {{ task.user.lastName }}</a></td>
+                            <td>
+                                {% if task.status == 0 %}
+                                    <span class="label label-success">{{ 'open'|trans }}</span>
+                                {% elseif task.status == 1 %}
+                                    <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                                {% elseif task.status == 2 %}
+                                    <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                                {% else %}
+                                    <span class="label label-info">{{ 'finished'|trans }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.project is not null %}
+                                    <a href="{{ path('project_edit', { id: task.project.id }) }}">{{ task.project.title }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.client is not null %}
+                                    <a href="{{ path('client_edit', { id: task.client.id }) }}">{{ task.client.name }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{% if task.created %}{{ task.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if task.arrivalTime %}{{ task.arrivalTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.departureTime %}{{ task.departureTime|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                            <td>{% if task.cancelledComment %}{{ task.cancelledComment }}{% else %}-{% endif %}</td>
+                            <td>
+                                <a class="btn btn-success" href="{{ path('task_edit', { 'id': task.id }) }}">{{ 'edit'|trans }}</a>
+                                {% if app.user.hasRole('ROLE_SUPER_ADMIN') %}
+                                    <a class="btn btn-danger" href="{{ path('task_delete', { 'id': task.id }) }}">{{ 'delete'|trans }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" id="refreshInterval" value="{{ settings.refreshInterval }}" />
+{% endblock %}
+
+{% block javascripts %}
+        <script src="/assets/js/autorefresh-main.js"></script>
+{% endblock %}

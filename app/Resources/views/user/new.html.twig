@@ -1,0 +1,33 @@
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}BRIS | {{ 'add_user'|trans }}{% endblock %}
+
+{% block content %}
+    <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+        <i class="entypo-right-circled"></i>
+        {{ 'add_user'|trans }}
+    </h3>
+    <a class="btn btn-primary pull-right btn-xs" href="{{ path('user_list') }}">{{ 'back_to_the_list'|trans }}</a>
+
+    <br /><br />
+
+    {% if app.session.flashBag.has('user_success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('user_success') %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+
+        <input class="btn btn-success pull-right" type="submit" value="{{ 'save'|trans }}" />
+    {{ form_end(form) }}
+
+    <br /><br />
+    <hr style="margin-top:0px;" />
+
+{% endblock %}

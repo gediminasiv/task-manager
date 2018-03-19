@@ -1,0 +1,70 @@
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}BRIS | {{ 'finish_task'|trans }}{% endblock %}
+
+{% block content %}
+    <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+        <i class="entypo-right-circled"></i>
+        {{ 'finish_task'|trans }}
+    </h3>
+    <a class="btn btn-primary pull-right btn-xs" href="{{ path('dashboard') }}">{{ 'back_to_the_list'|trans }}</a>
+
+    <br /><br />
+
+    <div class="row">
+        <div class="col-sm-12">
+            <b>{{ 'description'|trans }}</b>: {{ task.description }}<br />
+            <b>{{ 'project'|trans }}</b>: {{ task.project.title }}<br />
+            <b>{{ 'client'|trans }}</b>: {{ task.project.client ? task.project.client.name : '-' }}<br />
+            <b>{{ 'address'|trans }}</b>: {{ task.project.address }}<br />
+            <br /><hr />
+            <div class="alert alert-danger">
+                <p>{{ 'if_you_want_to_delay_task_please_add_a_comment_why_are_you_doing_it'|trans }}</p>
+            </div>
+            <hr />
+            <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+                <i class="entypo-archive"></i>
+                {{ 'files'|trans }}
+            </h3>
+            <input id="fileupload" type="file" name="files[]" data-url="{{ path('upload_file', { 'task': task.id }) }}" multiple>
+            <ul class="file-container"></ul>
+            <hr />
+        </div>
+    </div>
+    {{ form_start(edit_form) }}
+
+        {{ form_widget(edit_form) }}
+        <input class="btn btn-success pull-right" type="submit" value="{{ 'save'|trans }}" />
+    {{ form_end(edit_form) }}
+    <br /><br />
+
+    <hr style="margin-top:0px;" />
+
+    <script>
+
+    function listFiles()
+    {
+        $.get('{{ path('list_files', { 'task': task.id }) }}', function (data) {
+            $('.file-container').html('');
+
+            for (key in data) {
+                $('.file-container').append('<li><a class="bold-link" href="/' + data[key].path + '">' + data[key].name + '</a></li><br />')
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        listFiles();
+
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                listFiles();
+            }
+        });
+    });
+
+    </script>
+{% endblock %}

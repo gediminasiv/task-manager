@@ -1,0 +1,21 @@
+/**
+ *
+ * Apply Here your Custom CSS
+ *
+*/
+
+body {
+
+}
+.agent-form-question{
+    float:left;margin-top:7px;
+}
+.agent-form-answer-input{
+    width:60px;float:left;margin-left:10px;
+}
+.bold-link {
+    font-weight: bold;
+}
+.delete-link {
+    color: #ef7267;
+}

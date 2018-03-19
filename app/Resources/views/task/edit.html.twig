@@ -1,0 +1,201 @@
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}BRIS | {{ 'task_edit'|trans }}{% endblock %}
+
+{% block content %}
+    <script type="text/javascript" src="/components/moment/min/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="/components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="/components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+                <i class="entypo-right-circled"></i>
+                {{ 'task_edit'|trans }}
+            </h3>
+            <a class="btn btn-primary pull-right btn-xs" href="{{ path('dashboard') }}">{{ 'back_to_the_list'|trans }}</a>
+
+            <br /><br />
+
+            {% if app.session.flashBag.has('file_deleted_successfully') %}
+                <div class="alert alert-success">
+                    {% for msg in app.sesion.flashBag.get('file_deleted_successfully') %}
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if app.session.flashBag.has('task_success') %}
+                <div class="alert alert-success">
+                    {% for msg in app.session.flashBag.get('task_success') %}
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {{ form_start(edit_form) }}
+                {{ form_widget(edit_form) }}
+
+                <input class="btn btn-success pull-right" type="submit" value="{{ 'save'|trans }}" />
+            {{ form_end(edit_form) }}
+            <br /><br />
+        </div>
+    </div>
+
+    <hr style="margin-top:0px;" />
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+                <i class="entypo-archive"></i>
+                {{ 'task_archive'|trans }}
+            </h3>
+            {{ form_start(archive_form, { 'action': path('archive_task', { id: task.id }) }) }}
+                {{ form_widget(archive_form) }}
+
+                <input class="btn btn-primary pull-right" type="submit" value="{{ 'archive'|trans }}" />
+            {{ form_end(archive_form) }}
+            <br />
+            <br />
+        </div>
+    </div>
+
+    <hr style="margin-top:0px;" />
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+                <i class="entypo-camera"></i>
+                {{ 'files'|trans }}
+            </h3>
+            <input id="fileupload" type="file" name="files[]" data-url="{{ path('upload_file', { 'task': task.id }) }}" multiple>
+            <ul class="file-container"></ul>
+        </div>
+    </div>
+
+    <hr style="margin-top:0px;" />
+
+    {% if taskLogs|length > 0 %}
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 style="margin:20px 0px; color: #818da1; font-weight: 200;">
+                    <i class="entypo-tag"></i>
+                    {{ 'progress'|trans }}
+                </h3>
+
+                <br /><br />
+
+                <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>{{ 'time'|trans }}</th>
+                                <th>{{ 'status_before'|trans }}</th>
+                                <th>{{ 'status_after'|trans }}</th>
+                                <th>{{ 'user_changed'|trans }}</th>
+                                <th>{{ 'user_before'|trans }}</th>
+                                <th>{{ 'user_after'|trans }}</th>
+                                <th>{{ 'cancelled_comment'|trans }}</th>
+                                <th>{{ 'timespent'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for taskLog in taskLogs %}
+                                <tr>
+                                    <td>{{ taskLog.created|date('Y-m-d H:i:s') }}</td>
+                                    <td>
+                                        {% if taskLog.statusBefore == 0 %}
+                                            <span class="label label-success">{{ 'open'|trans }}</span>
+                                        {% elseif taskLog.statusBefore == 1 %}
+                                            <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                                        {% elseif taskLog.statusBefore == 2 %}
+                                            <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                                        {% else %}
+                                            <span class="label label-info">{{ 'finished'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if taskLog.statusAfter == 0 %}
+                                            <span class="label label-success">{{ 'open'|trans }}</span>
+                                        {% elseif taskLog.statusAfter == 1 %}
+                                            <span class="label label-warning">{{ 'arrival'|trans }}</span>
+                                        {% elseif taskLog.statusAfter == 2 %}
+                                            <span class="label label-danger">{{ 'delayed'|trans }}</span>
+                                        {% else %}
+                                            <span class="label label-info">{{ 'finished'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><a href="{{ path('user_edit', { id: taskLog.userChanged.id }) }}">{{ taskLog.userChanged.firstName }} {{ taskLog.userChanged.lastName }}</a></td>
+                                    <td><a href="{{ path('user_edit', { id: taskLog.userBefore.id }) }}">{{ taskLog.userBefore.firstName }} {{ taskLog.userBefore.lastName }}</a></td>
+                                    <td><a href="{{ path('user_edit', { id: taskLog.userAfter.id }) }}">{{ taskLog.userAfter.firstName }} {{ taskLog.userAfter.lastName }}</a></td>
+                                    <td>{{ taskLog.comment }}</td>
+                                    <td>{{ taskLog.timespent }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    {% endif %}
+
+    <input type="hidden" id="url-list" value="{{ path('user_search_list') }}" />
+    <input type="hidden" id="url-get" value="/api/fetch-single" />
+    <input type="hidden" id="url-project-list" value="{{ path('project_search_list') }}" />
+    <input type="hidden" id="url-project-get" value="/api/fetch-single-project" />
+    <input type="hidden" id="url-client-list" value="{{ path('client_search_list') }}" />
+    <input type="hidden" id="url-client-get" value="/api/fetch-single-client" />
+
+    <script>
+    var options = {
+        url_list: $('#url-list').val(),
+        url_get: $('#url-get').val(),
+        min_length: 0
+    };
+
+    function listFiles()
+    {
+        $.get('{{ path('list_files', { 'task': task.id }) }}', function (data) {
+            $('.file-container').html('');
+
+            for (key in data) {
+                $('.file-container').append('<li><a class="bold-link" href="/' + data[key].path + '">' + data[key].name + '</a>&nbsp;<a style="" href="/api/delete-file/' + data[key].id + '" class="delete-link">&times;</a></li><br />')
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        listFiles();
+
+        $('#appbundle_task_created_date').datetimepicker({
+            format: 'YYYY-MM-DD',
+            locale: 'lt'
+        });
+
+        $('#appbundle_task_user').autocompleter(options);
+
+        $('#appbundle_task_project').autocompleter({
+            url_list: $('#url-project-list').val(),
+            url_get: $('#url-project-get').val(),
+            min_length: 0
+        });
+
+        $('#appbundle_task_client').autocompleter({
+            url_list: $('#url-client-list').val(),
+            url_get: $('#url-client-get').val(),
+            min_length: 0
+        });
+
+        $('[id^=fake_]').on('focus', function (event, ui) {
+            $(this).autocomplete('search', '');
+        });
+
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                listFiles();
+            }
+        });
+    });
+    </script>
+    <script type="text/javascript" src="{{ asset('assets/js/newTask.js') }}"></script>
+{% endblock %}

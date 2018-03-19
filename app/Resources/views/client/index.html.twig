@@ -1,0 +1,55 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}BRIS | {{ 'clients'|trans }}{% endblock %}
+
+{% block content %}
+<h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+    <i class="entypo-right-circled"></i>
+    {{ 'client_list'|trans }}
+</h3>
+<a href="{{ path('client_new') }}" class="btn btn-primary pull-right">
+    <i class="entypo-user-add"></i>
+    {{ 'add_client'|trans }}
+</a>
+
+<br /><br />
+
+<div class="row">
+    <div class="col-xs-12">
+        {% if app.session.flashBag.has('success') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('success') %}
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <table id="table_export" class="table table-bordered table-striped datatable dataTable">
+            <thead>
+                <tr>
+                    <th data-priority="5"></th>
+                    <th data-priority="2">{{ 'name'|trans }}</th>
+                    <th data-priority="4">{{ 'website'|trans }}</th>
+                    <th data-priority="3">{{ 'responsible_user'|trans }}</th>
+                    <th data-priority="1">{{ 'actions'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for client in clients %}
+                <tr>
+                    <td>{{ client.id }}</td>
+                    <td>{{ client.name }}</td>
+                    <td><a href="{{ client.website }}">{{ client.website }}</a></td>
+                    <td>{% if client.user %}<a href="{{ path('client_edit', { id: client.id }) }}">{{ client.user.firstName }} {{ client.user.lastName }}</a>{% endif %}</td>
+                    <td>
+                        <a class="btn btn-success" href="{{ path('client_edit', { 'id': client.id }) }}">{{ 'edit'|trans }}</a>
+                        {% if app.user.hasRole('ROLE_SUPER_ADMIN') %}
+                            <a class="btn btn-danger" href="{{ path('client_delete', { 'id': client.id }) }}">{{ 'delete'|trans }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

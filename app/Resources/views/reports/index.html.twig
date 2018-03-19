@@ -1,0 +1,60 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}BRIS | {{ 'reports'|trans }}{% endblock %}
+
+{% block content %}
+<h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+    <i class="entypo-right-circled"></i>
+    {{ 'reports'|trans }}
+</h3>
+
+<br /><br />
+
+<div class="row">
+    <div class="col-xs-4">
+        <div class="tile-stats tile-white tile-white-primary" style="padding:30px 20px;">
+            <div class="icon" style="bottom:40px;"><i class="entypo-trophy"></i></div>
+            <div class="num" data-start="0" data-end="{{ clients|length }}" data-duration="500" data-delay="0" style="font-weight:200;">{{ clients|length }}</div>
+            <h3 style="font-weight:200;">{{ 'clients'|trans }}</h3>
+        </div>
+
+        <div class="tile-stats tile-white tile-white-primary" style="padding:30px 20px;">
+            <div class="icon" style="bottom:40px;"><i class="entypo-megaphone"></i></div>
+            <div class="num" data-start="0" data-end="{{ projects|length }}" data-duration="500" data-delay="0" style="font-weight:200;">{{ projects|length }}</div>
+            <h3 style="font-weight:200;">{{ 'projects'|trans }}</h3>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div class="tile-stats tile-white tile-white-primary" style="padding:30px 20px;">
+            <div class="icon" style="bottom:40px;"><i class="entypo-clock"></i></div>
+            <div class="num" data-start="0" data-end="{{ spentHours }}" data-duration="500" data-delay="0" style="font-weight:200;">{{ spentHours }}</div>
+            <h3 style="font-weight:200;">{{ 'hours_spent'|trans }}</h3>
+        </div>
+        <div class="tile-stats tile-white tile-white-primary" style="padding:30px 20px;">
+            <div class="icon" style="bottom:40px;"><i class="entypo-flight"></i></div>
+            <div class="num" data-start="0" data-end="{{ totalDistance }}" data-duration="500" data-delay="0" style="font-weight:200;">{{ totalDistance }}</div>
+            <h3 style="font-weight:200;">{{ 'total_distance_km'|trans }}</h3>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>{{ 'service_man'|trans }}</th>
+                    <th>{{ 'distance'|trans }}</th>
+                    <th>{{ 'hours_spent'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in userTasks %}
+                    <tr>
+                        <td>{{ task['firstName'] }} {{ task['lastName'] }}</td>
+                        <td>{{ task['distance'] }}</td>
+                        <td>{{ (task['seconds']/60/60)|round(2, 'ceil') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

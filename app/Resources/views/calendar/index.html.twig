@@ -1,0 +1,42 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}BRIS | {{ 'clients'|trans }}{% endblock %}
+
+{% block content %}
+<h3 style="margin:20px 0px; color:#818da1; font-weight:200;">
+    <i class="entypo-calendar"></i>
+    {{ 'calendar'|trans }}
+</h3>
+
+<br /><br />
+
+<div class="row">
+    <div class="col-xs-6">
+        <div class="btn-group">
+            <p>{{ 'navigation'|trans }}:</p>
+            <button class="btn btn-primary date-control" data-calendar-nav="prev">{{ 'last'|trans }}</button>
+            <button class="btn btn-info date-control" data-calendar-nav="today">{{ 'today'|trans }}</button>
+            <button class="btn btn-primary date-control" data-calendar-nav="next">{{ 'next'|trans }}</button>
+        </div>
+    </div>
+    <div class="col-xs-6" style="text-align: right">
+        <p>{{ 'view'|trans }}:</p>
+        <div class="btn-group">
+            <button class="btn btn-success" data-calendar-view="year">{{ 'year'|trans }}</button>
+            <button class="btn btn-success active" data-calendar-view="month">{{ 'month'|trans }}</button>
+            <button class="btn btn-success" data-calendar-view="week">{{ 'week'|trans }}</button>
+            <button class="btn btn-success" data-calendar-view="day">{{ 'day'|trans }}</button>
+        </div>
+    </div>
+</div><br />
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="title"></h3>
+        <div class="calendar"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="/assets/js/calendar.js"></script>
+{% endblock %}

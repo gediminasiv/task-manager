@@ -1,0 +1,10 @@
+index:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+register:
+    path: /register
+    defaults: { _controller: AppBundle:Index:register }
